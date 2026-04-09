@@ -22,7 +22,7 @@ pyright:
 unit-tests:
   stage: test
   script:
-    - uv run pytest tests/unit --cov=workshop --cov-report=
+    - uv run pytest tests/unit --cov=src --cov-report=
     - mv .coverage .coverage.unit
   artifacts:
     paths:
@@ -32,7 +32,7 @@ unit-tests:
 feature-tests:
   stage: test
   script:
-    - uv run pytest tests/features --cov=workshop --cov-report=
+    - uv run pytest tests/features --cov=src --cov-report=
     - mv .coverage .coverage.features
   artifacts:
     paths:

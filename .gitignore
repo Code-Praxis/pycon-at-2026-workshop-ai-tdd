@@ -1,0 +1,32 @@
+# Python distribution / build
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Testing and coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+htmlcov-*/
+.pytest_cache/
+
+# Static analysis and linting
+.mypy_cache/
+.ruff_cache/
+.pyright_cache/
+
+# IDE and system
+.idea/
+.vscode/
+.DS_Store
+
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class

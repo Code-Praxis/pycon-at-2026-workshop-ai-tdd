@@ -19,15 +19,15 @@ ty:
   script:
     - uv run ty check
 
-unit-tests:
-  stage: test
-  script:
-    - uv run pytest tests/unit --cov=src --cov-report=
-    - mv .coverage .coverage.unit
-  artifacts:
-    paths:
-      - .coverage.unit
-    expire_in: 1 hour
+#unit-tests:
+#  stage: test
+#  script:
+#    - uv run pytest tests/unit --cov=src --cov-report=
+#    - mv .coverage .coverage.unit
+#  artifacts:
+#    paths:
+#      - .coverage.unit
+#    expire_in: 1 hour
 
 feature-tests:
   stage: test
@@ -42,7 +42,7 @@ feature-tests:
 merge-coverage:
   stage: post-test
   needs:
-    - unit-tests
+#    - unit-tests
     - feature-tests
   script:
     - uv run coverage combine

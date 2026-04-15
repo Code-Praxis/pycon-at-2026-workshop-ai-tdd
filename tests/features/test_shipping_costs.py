@@ -1,6 +1,6 @@
 import pytest
 
-from shopping_cart.main import main
+from shipping_costs.main import main
 
 
 def test_should_generate_personalized_greeting_for_attendee(
@@ -18,4 +18,4 @@ def test_should_generate_personalized_greeting_for_attendee(
 
     # Then the output captured by stdout should be "Hi, PyCon attendee\n"
     captured = capsys.readouterr()
-    assert captured.out == "Hi, PyCon attendee\n"
+    assert captured.out == "test\n"

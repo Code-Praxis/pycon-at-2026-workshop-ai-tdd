@@ -1,21 +1,8 @@
 import pytest
 
-from shipping_costs.main import main
+from shipping_costs.calculator import calculate_shipping_costs, BASE_SHIPPING_RATE
 
 
-def test_should_generate_personalized_greeting_for_attendee(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    """
-    Acceptance test: Verify the application outputs a personalized greeting
-    for a PyCon attendee.
-    """
-    # Given the application is run with "PyCon attendee" as an argument
-    args = ["PyCon attendee"]
+def test_shipping_of_an_empty_order_costs_the_base_rate() -> None:
+    assert calculate_shipping_costs(weight=0) == BASE_SHIPPING_RATE
 
-    # When the main application is executed
-    main(args)
-
-    # Then the output captured by stdout should be "Hi, PyCon attendee\n"
-    captured = capsys.readouterr()
-    assert captured.out == "test\n"

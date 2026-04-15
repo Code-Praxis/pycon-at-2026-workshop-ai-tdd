@@ -1,8 +1,20 @@
+from enum import Enum
 from typing import NewType
 from dataclasses import dataclass
 
 WeightInKg = NewType("WeightInKg", float)
 CostsInEuro = NewType("CostsInEuro", float)
+
+class ShippingZone(Enum):
+    A = "A"  # Local
+    B = "B"  # Domestic
+    C = "C"  # International
+
+ZONE_MULTIPLIERS = {
+    ShippingZone.A: 1.0,
+    ShippingZone.B: 1.5,
+    ShippingZone.C: 2.5,
+}
 
 @dataclass(frozen=True)
 class ShippingTier:
@@ -17,7 +29,10 @@ TIERS = [
     ShippingTier(max_weight=float('inf'), rate_per_kg=2.0),
 ]
 
-def calculate_shipping_costs(weight: WeightInKg) -> CostsInEuro:
+def calculate_shipping_costs(
+    weight: WeightInKg, 
+    zone: ShippingZone = ShippingZone.A
+) -> CostsInEuro:
     remaining_weight = float(weight)
     total_cost = BASE_SHIPPING_RATE
     
@@ -31,4 +46,5 @@ def calculate_shipping_costs(weight: WeightInKg) -> CostsInEuro:
         remaining_weight -= weight_in_tier
         previous_max_weight = tier.max_weight
         
-    return CostsInEuro(total_cost)
+    multiplier = ZONE_MULTIPLIERS[zone]
+    return CostsInEuro(total_cost * multiplier)

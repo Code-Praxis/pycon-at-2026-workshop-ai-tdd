@@ -1,6 +1,6 @@
 import pytest
 
-from shipping_costs.calculator import calculate_shipping_costs, BASE_SHIPPING_RATE, WeightInKg
+from shipping_costs.calculator import calculate_shipping_costs, BASE_SHIPPING_RATE, WeightInKg, ShippingZone
 
 
 def test_shipping_of_an_empty_order_costs_the_base_rate() -> None:
@@ -25,3 +25,18 @@ def test_shipping_costs_for_high_weight_tiers(weight: WeightInKg) -> None:
     # 5.0 + 5.0 + 22.5 = 32.5 base for tier 3
     expected_cost = 32.5 + (float(weight) - 20.0) * 2.0
     assert calculate_shipping_costs(weight=weight) == expected_cost
+
+
+@pytest.mark.parametrize(
+    "zone, expected_multiplier",
+    [
+        (ShippingZone.A, 1.0),
+        (ShippingZone.B, 1.5),
+        (ShippingZone.C, 2.5),
+    ],
+)
+def test_shipping_costs_for_different_zones(zone: ShippingZone, expected_multiplier: float) -> None:
+    weight = WeightInKg(10)
+    # Cost for 10kg in Zone A: 5.0 (base) + 5.0*1.0 (Tier 1) + 5.0*1.5 (Tier 2) = 17.5
+    base_cost = 17.5
+    assert calculate_shipping_costs(weight=weight, zone=zone) == base_cost * expected_multiplier

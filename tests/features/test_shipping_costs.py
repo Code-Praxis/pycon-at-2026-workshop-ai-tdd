@@ -1,6 +1,11 @@
 import pytest
 
-from shipping_costs.calculator import calculate_shipping_costs, BASE_SHIPPING_RATE, WeightInKg, ShippingZone
+from shipping_costs.calculator import (
+    BASE_SHIPPING_RATE,
+    ShippingZone,
+    WeightInKg,
+    calculate_shipping_costs,
+)
 
 
 def test_shipping_of_an_empty_order_costs_the_base_rate() -> None:
@@ -28,15 +33,27 @@ def test_shipping_costs_for_high_weight_tiers(weight: WeightInKg) -> None:
 
 
 @pytest.mark.parametrize(
-    "zone, expected_multiplier",
+    "zone, expected_cost",
     [
-        (ShippingZone.A, 1.0),
-        (ShippingZone.B, 1.5),
-        (ShippingZone.C, 2.5),
+        (ShippingZone.Local, 17.5 * 1.0),
+        (ShippingZone.Domestic, 17.5 * 1.5),
+        (ShippingZone.International, 17.5 * 2.5),
     ],
 )
-def test_shipping_costs_for_different_zones(zone: ShippingZone, expected_multiplier: float) -> None:
+def test_shipping_costs_for_different_zones(zone: ShippingZone, expected_cost: float) -> None:
     weight = WeightInKg(10)
     # Cost for 10kg in Zone A: 5.0 (base) + 5.0*1.0 (Tier 1) + 5.0*1.5 (Tier 2) = 17.5
-    base_cost = 17.5
-    assert calculate_shipping_costs(weight=weight, zone=zone) == base_cost * expected_multiplier
+    assert calculate_shipping_costs(weight=weight, zone=zone) == expected_cost
+
+
+@pytest.mark.parametrize(
+    "zone, expected_cost",
+    [
+        (ShippingZone.Local, 17.5 + 15.0),
+        (ShippingZone.International, (17.5 * 2.5) + 15.0),
+    ],
+)
+def test_express_delivery_adds_fifteen_euro(zone: ShippingZone, expected_cost: float) -> None:
+    weight = WeightInKg(10)
+    # 10kg standard is 17.5 (Local)
+    assert calculate_shipping_costs(weight=weight, zone=zone, is_express=True) == expected_cost

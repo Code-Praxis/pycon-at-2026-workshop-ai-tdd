@@ -18,7 +18,7 @@ We use a combination of **TDD (Test-Driven Development)**, **ATDD (Acceptance Te
 
 ### 3. Static Analysis & Linting
 - **Ruff**: Fast Python linter and formatter.
-- **Mypy**: Static type checker to catch type errors before they happen.
+- **ty**: Static type checker to catch type errors before they happen.
 
 ---
 
@@ -52,7 +52,7 @@ ruff check .
 ruff format .
 
 # Type checking
-mypy src
+ty check src
 ```
 
 ## Workshop Workflow (The "Vibe")
@@ -61,4 +61,4 @@ mypy src
 2. **Fail**: Run `pytest` and see the test fail.
 3. **Vibe**: Let the LLM generate the unit tests and the implementation.
 4. **Pass**: Run `pytest` until everything is green.
-5. **Enforce**: Run `ruff` and `mypy` to ensure the "vibe" didn't introduce messy code or type bugs.
+5. **Enforce**: Run `ruff` and `ty` to ensure the "vibe" didn't introduce messy code or type bugs.

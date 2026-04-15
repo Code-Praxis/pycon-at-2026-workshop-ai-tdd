@@ -14,10 +14,10 @@ ruff:
   script:
     - uv run ruff check src
 
-pyright:
+ty:
   stage: lint
   script:
-    - uv run pyright
+    - uv run ty check
 
 unit-tests:
   stage: test

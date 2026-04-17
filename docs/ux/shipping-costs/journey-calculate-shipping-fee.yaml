@@ -1,0 +1,98 @@
+name: calculate-shipping-fee
+feature: shipping-costs
+type: backend
+actor: checkout-service
+goal: obtain correct shipping fee in EUR for a package given weight, zone, and delivery type
+date: 2026-04-17
+grounded_in:
+  - docs/feature/pycon-austria-2026-workshop/discuss/jtbd-job-stories.md
+
+steps:
+  - id: S1
+    name: assemble-inputs
+    actor: caller
+    action: "Provide weight_kg (float), zone (Zone enum), express (bool, default False)"
+    output: "input tuple (weight_kg, zone, express)"
+    emotional_state: neutral
+
+  - id: S2
+    name: validate-inputs
+    actor: function
+    action: "Check weight_kg >= 0 and weight_kg <= 100.0"
+    output: "validated inputs OR ValueError"
+    emotional_state: confident
+    error_paths:
+      - trigger: "weight_kg < 0"
+        raises: "ValueError('Weight cannot be negative.')"
+      - trigger: "weight_kg > 100.0"
+        raises: "ValueError('Weight exceeds maximum allowed (100.0 kg).')"
+
+  - id: S3
+    name: calculate-weight-cost
+    actor: function
+    action: "Apply tiered pricing to weight_kg plus BASE_RATE (€5.00)"
+    tiers:
+      - range: "0–5 kg"
+        rate_per_kg: 1.00
+      - range: "5–20 kg"
+        rate_per_kg: 1.50
+      - range: ">20 kg"
+        rate_per_kg: 2.00
+    output: "subtotal (float)"
+    emotional_state: n/a
+
+  - id: S4
+    name: apply-zone-multiplier
+    actor: function
+    action: "Multiply subtotal by zone factor"
+    zone_multipliers:
+      A: 1.0
+      B: 1.5
+      C: 2.5
+    output: "zone-adjusted fee (float)"
+    emotional_state: n/a
+
+  - id: S5
+    name: apply-express-surcharge
+    actor: function
+    action: "Add EXPRESS_SURCHARGE (€15.00) if express=True"
+    output: "final fee before rounding (float)"
+    emotional_state: n/a
+
+  - id: S6
+    name: return-fee
+    actor: function
+    action: "Round to 2 decimal places and return"
+    output: "fee: float (EUR, 2dp)"
+    emotional_state: confident
+
+shared_artifacts:
+  - name: weight_kg
+    type: float
+    source: S1
+    consumed_by: [S2, S3]
+  - name: zone
+    type: Zone
+    source: S1
+    consumed_by: [S4]
+  - name: express
+    type: bool
+    source: S1
+    consumed_by: [S5]
+  - name: fee
+    type: float
+    unit: EUR
+    precision: 2dp
+    source: S6
+    consumed_by: [caller]
+
+emotional_arc:
+  start: neutral
+  end: confident
+  trajectory: monotonically-increasing
+  inflection_point: S2 (validation clears uncertainty about bad inputs)
+
+constants:
+  BASE_RATE: 5.00
+  EXPRESS_SURCHARGE: 15.00
+  MAX_WEIGHT: 100.0

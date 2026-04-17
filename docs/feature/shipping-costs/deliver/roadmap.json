@@ -2,7 +2,7 @@
   "roadmap": {
     "project_id": "shipping-costs",
     "created_at": "2026-04-17T18:03:47Z",
-    "total_steps": 4,
+    "total_steps": 5,
     "phases": 1
   },
   "phases": [
@@ -37,6 +37,13 @@
           "criteria": "calculate_delivery_fee(weight_kg, zone, express=True) adds EXPRESS_SURCHARGE=15.00 after zone multiplication; express=False adds nothing; default is False",
           "test_file": "tests/acceptance/test_shipping_costs.py",
           "scenario_name": "TestExpressSurcharge"
+        },
+        {
+          "id": "01-05",
+          "name": "Fix Testing Theater in TestInputValidation (post-review revision)",
+          "criteria": "test_zero_weight_is_valid asserts result==5.00; test_maximum_weight_is_valid asserts result==192.50; remove tautological isinstance and circular round() assertions",
+          "test_file": "tests/acceptance/test_shipping_costs.py",
+          "scenario_name": "TestInputValidation"
         }
       ]
     }

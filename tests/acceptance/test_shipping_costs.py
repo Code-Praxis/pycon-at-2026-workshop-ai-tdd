@@ -87,18 +87,9 @@ class TestInputValidation:
             calculate_delivery_fee(100.001, Zone.A)
 
     def test_zero_weight_is_valid(self) -> None:
-        result = calculate_delivery_fee(0.0, Zone.A)
-        assert isinstance(result, float)
-        assert result > 0
+        # zero weight: only BASE_RATE applies
+        assert calculate_delivery_fee(0.0, Zone.A) == 5.00
 
     def test_maximum_weight_is_valid(self) -> None:
-        result = calculate_delivery_fee(100.0, Zone.A)
-        assert isinstance(result, float)
-        assert result > 0
-
-    def test_return_type_is_float(self) -> None:
-        assert isinstance(calculate_delivery_fee(3.0, Zone.A), float)
-
-    def test_return_is_rounded_to_two_decimal_places(self) -> None:
-        result = calculate_delivery_fee(3.0, Zone.A)
-        assert result == round(result, 2)
+        # 100 kg: weight_cost = 5+22.5+160 = 187.50; fee = (5+187.5)×1.0 = 192.50
+        assert calculate_delivery_fee(100.0, Zone.A) == 192.50

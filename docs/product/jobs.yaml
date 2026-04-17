@@ -1,0 +1,40 @@
+version: 1
+last_updated: 2026-04-17
+source: docs/feature/pycon-austria-2026-workshop/discuss/jtbd-job-stories.md
+
+jobs:
+  - id: JOB-01
+    name: Gain a Trusted, Repeatable AI-Assisted Workflow
+    story: >
+      When I am using an LLM to generate Python code for a real feature,
+      I want to apply tests and quality gates before accepting the generated output,
+      so I can ship fast without discovering broken behaviour two sprints later.
+    opportunity_score: HIGH
+    features_that_serve: [pycon-austria-2026-workshop, shipping-costs]
+
+  - id: JOB-02
+    name: Discover Why TDD Actually Helps on Real Code
+    story: >
+      When I have tried TDD tutorials before but found them unconvincing because examples were trivial,
+      I want to see TDD applied to code with genuine edge cases and multiple code paths,
+      so I can understand how test coverage changes my ability to refactor safely.
+    opportunity_score: HIGH
+    features_that_serve: [pycon-austria-2026-workshop, shipping-costs]
+
+  - id: JOB-03
+    name: Get Environment Ready Without Losing Workshop Time
+    story: >
+      When I arrive at a hands-on workshop at a conference,
+      I want to have a working Python environment with all dependencies already verified,
+      so I can spend the 90 minutes learning the workflow instead of debugging installation issues.
+    opportunity_score: MEDIUM
+    features_that_serve: [pycon-austria-2026-workshop]
+
+  - id: JOB-04
+    name: Understand the Line Between Acceptance Tests and Unit Tests
+    story: >
+      When I write tests for LLM-generated code and they break every time I refactor,
+      I want to learn the distinction between acceptance tests and unit tests,
+      so I can design test suites that survive internal refactoring.
+    opportunity_score: MEDIUM-HIGH
+    features_that_serve: [pycon-austria-2026-workshop, shipping-costs]

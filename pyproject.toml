@@ -1,10 +1,11 @@
 [project]
 name = "workshop"
 version = "0.1.0"
-description = "Workshop project: vibe coding with guard rails using TDD + ATDD"
+description = "Workshop project"
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = "==3.11.*"
+dependencies = [
+]
 
 [project.optional-dependencies]
 dev = [
@@ -27,14 +28,14 @@ addopts = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py314"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 # E/F: pycodestyle/pyflakes, I: import sorting, B: bugbear, UP: pyupgrade
 
 [tool.ty.environment]
-python-version = "3.14"
+python-version = "3.11"
 # typeCheckingMode = "strict" is not directly supported, but ty is strict by default in many ways
 # reportMissingImports = true
 # reportMissingTypeStubs = false

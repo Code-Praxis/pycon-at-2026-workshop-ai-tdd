@@ -1,0 +1,63 @@
+name: calculate-shipping-fee
+feature: shipping-costs
+type: backend
+version: 1
+date: 2026-04-17
+actor: checkout-service
+goal: obtain correct shipping fee in EUR given weight, zone, delivery type
+jobs: [JOB-01, JOB-02]
+
+entry_point: "calculate_delivery_fee(weight_kg: float, zone: Zone, express: bool = False) -> float"
+
+steps:
+  - id: S1
+    name: assemble-inputs
+    actor: caller
+    output: "(weight_kg, zone, express)"
+
+  - id: S2
+    name: validate-inputs
+    actor: function
+    output: "validated inputs OR ValueError"
+    guards:
+      - "weight_kg < 0 → ValueError('Weight cannot be negative.')"
+      - "weight_kg > 100.0 → ValueError('Weight exceeds maximum allowed (100.0 kg).')"
+
+  - id: S3
+    name: calculate-weight-cost
+    actor: function
+    output: "subtotal (float)"
+    formula: "BASE_RATE(5.00) + tiered_weight_cost(weight_kg)"
+    tiers:
+      - "0–5 kg @ €1.00/kg"
+      - "5–20 kg @ €1.50/kg"
+      - ">20 kg @ €2.00/kg"
+
+  - id: S4
+    name: apply-zone-multiplier
+    actor: function
+    output: "zone-adjusted fee (float)"
+    formula: "subtotal × zone_multiplier"
+    zone_multipliers: {A: 1.0, B: 1.5, C: 2.5}
+
+  - id: S5
+    name: apply-express-surcharge
+    actor: function
+    output: "final fee before rounding (float)"
+    formula: "zone_fee + (EXPRESS_SURCHARGE if express else 0)"
+    EXPRESS_SURCHARGE: 15.00
+
+  - id: S6
+    name: return-fee
+    actor: function
+    output: "fee: float (EUR, 2dp)"
+    formula: "round(final_fee, 2)"
+
+emotional_arc:
+  start: neutral
+  end: confident
+
+constants:
+  BASE_RATE: 5.00
+  EXPRESS_SURCHARGE: 15.00
+  MAX_WEIGHT: 100.0

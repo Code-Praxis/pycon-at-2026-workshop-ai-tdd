@@ -1,0 +1,61 @@
+{
+  "roadmap": {
+    "project_id": "shipping-costs",
+    "created_at": "2026-04-17T18:03:47Z",
+    "total_steps": 4,
+    "phases": 1
+  },
+  "phases": [
+    {
+      "id": "01",
+      "name": "Core Shipping Fee Implementation",
+      "steps": [
+        {
+          "id": "01-01",
+          "name": "Implement input validation guards",
+          "criteria": "calculate_delivery_fee raises ValueError('Weight cannot be negative.') for weight_kg < 0; raises ValueError('Weight exceeds maximum allowed (100.0 kg).') for weight_kg > 100.0; accepts 0.0 and 100.0 without error",
+          "test_file": "tests/acceptance/test_shipping_costs.py",
+          "scenario_name": "TestInputValidation"
+        },
+        {
+          "id": "01-02",
+          "name": "Implement tiered weight cost calculation",
+          "criteria": "calculate_delivery_fee(weight_kg, Zone.A) returns (BASE_RATE + tiered_weight_cost) * 1.0 rounded to 2dp; tiers: 0-5kg at 1.00/kg, 5-20kg at 1.50/kg, >20kg at 2.00/kg; BASE_RATE=5.00",
+          "test_file": "tests/acceptance/test_shipping_costs.py",
+          "scenario_name": "TestWeightBasedFee"
+        },
+        {
+          "id": "01-03",
+          "name": "Implement zone multiplier application",
+          "criteria": "calculate_delivery_fee(weight_kg, Zone.B) applies 1.5x to full subtotal (BASE_RATE + weight_cost); Zone.C applies 2.5x; multiplier wraps entire subtotal not just weight_cost",
+          "test_file": "tests/acceptance/test_shipping_costs.py",
+          "scenario_name": "TestZoneMultiplier"
+        },
+        {
+          "id": "01-04",
+          "name": "Implement express delivery surcharge",
+          "criteria": "calculate_delivery_fee(weight_kg, zone, express=True) adds EXPRESS_SURCHARGE=15.00 after zone multiplication; express=False adds nothing; default is False",
+          "test_file": "tests/acceptance/test_shipping_costs.py",
+          "scenario_name": "TestExpressSurcharge"
+        }
+      ]
+    }
+  ],
+  "implementation_scope": {
+    "source_directories": [
+      "src/shipping_costs/"
+    ],
+    "test_directories": [
+      "tests/acceptance/",
+      "tests/unit/"
+    ],
+    "excluded_patterns": [
+      "__pycache__/**"
+    ]
+  },
+  "validation": {
+    "status": "approved",
+    "reviewer": "nw-acceptance-designer-reviewer",
+    "approved_at": "2026-04-17T18:10:00Z"
+  }
+}

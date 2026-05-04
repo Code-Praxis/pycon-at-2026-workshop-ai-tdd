@@ -30,3 +30,8 @@ htmlcov-*/
 __pycache__/
 *.py[cod]
 *$py.class
+
+#mutation files:
+mutmut/
+mutations/
+
